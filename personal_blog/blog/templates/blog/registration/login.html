@@ -1,0 +1,57 @@
+{% extends "blog/base_auth.html" %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+<h3 class="text-center mb-4 fw-bold">Welcome Back !</h3>
+
+{% if form.errors %}
+<div class="alert alert-danger text-center py-2">Invalid credentials</div>
+<input type="hidden" id="loginError" value="1">
+{% endif %}
+
+<form method="POST" id="loginForm">
+  {% csrf_token %}
+
+  <div class="form-floating mb-3">
+    <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
+    <label for="username">Username</label>
+  </div>
+
+  <div class="form-floating mb-3 position-relative">
+    <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+    <label for="password">Password</label>
+    <i id="togglePassword" class="bi bi-eye-slash position-absolute top-50 end-0 translate-middle-y me-3 fs-5" style="cursor:pointer;"></i>
+  </div>
+
+  <div class="d-flex justify-content-between mb-3">
+    <label><input type="checkbox" name="remember"> Remember Me</label>
+    <a href="{% url 'password_reset' %}" class="text-light small">Forgot Password?</a>
+  </div>
+
+  <button class="btn-premium w-100">Login</button>
+</form>
+
+<p class="text-center mt-3">
+  New here?
+  <a href="{% url 'signup' %}" class="text-warning fw-semibold">Create Account</a>
+</p>
+
+<script>
+  document.getElementById("togglePassword").onclick = function(){
+    const p = document.getElementById("password");
+    p.type = p.type === "password" ? "text" : "password";
+    this.classList.toggle("bi-eye");
+    this.classList.toggle("bi-eye-slash");
+  };
+
+  document.addEventListener("DOMContentLoaded", () => {
+    if (document.getElementById("loginError")) {
+      const form = document.getElementById("loginForm");
+      form.classList.add("shake");
+      setTimeout(()=>form.classList.remove("shake"), 400);
+    }
+  });
+</script>
+
+{% endblock %}

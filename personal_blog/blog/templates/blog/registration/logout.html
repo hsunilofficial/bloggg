@@ -1,0 +1,9 @@
+{% extends 'blog/base_auth.html' %}
+{% block title %}Logged Out{% endblock %}
+
+{% block content %}
+<h3 class="text-center mb-3 fw-bold">You are logged out</h3>
+<p class="text-center mb-4 opacity-75">We hope to see you again soon.</p>
+
+<a href="{% url 'login' %}" class="btn-premium w-100 text-center">Login Again</a>
+{% endblock %}

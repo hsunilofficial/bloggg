@@ -1,0 +1,189 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Auth{% endblock %}</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+    /* ================= Entire CSS ================= */
+
+    :root{
+      --glass-bg: rgba(255,255,255,0.16);
+      --glass-border: rgba(255,255,255,0.28);
+      --card-radius: 18px;
+      --transition-fast: 180ms;
+      --transition-medium: 350ms;
+      --accent-light-1: #6a11cb;
+      --accent-light-2: #2575fc;
+    }
+
+    html,body{height:100%; margin:0; padding:0;}
+
+    body{
+      font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto;
+      min-height:100vh;
+      overflow:hidden;
+      transition: background var(--transition-medium), color var(--transition-medium);
+    }
+
+    /* Themes */
+    body.theme-light{
+      background: linear-gradient(180deg, #fafafa, #efeff2);
+      color:#1d1d1f;
+    }
+    body.theme-dark{
+      background: radial-gradient(circle at 10% 10%, #3a3b40, #121214);
+      color:#f5f5f7;
+    }
+    body.theme-glass{
+      background: linear-gradient(135deg, #eaf1fb, #ffffff);
+      color:#1d1d1f;
+    }
+
+    /* Perfect Center Wrapper */
+    .auth-wrapper{
+      min-height:100vh;
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+      z-index:10;
+      padding:20px;
+    }
+
+    /* Particle canvas */
+    #bg-canvas{
+      position:fixed; inset:0; z-index:0; pointer-events:none;
+      filter:blur(6px) saturate(105%);
+      opacity:0.7;
+    }
+
+    /* Glow */
+    .bg-glow{
+      position:absolute; inset:0; z-index:0; pointer-events:none; filter:blur(60px);
+    }
+
+    /* Theme Switcher */
+    .theme-switcher{
+      position:fixed; right:20px; bottom:20px; z-index:60;
+      display:flex; gap:8px; padding:8px;
+      border-radius:999px;
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.06);
+      backdrop-filter:blur(8px);
+    }
+    .theme-btn{
+      width:44px; height:44px;
+      border-radius:12px; border:none;
+      background:rgba(255,255,255,0.06);
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer;
+    }
+    .theme-btn.active{
+      box-shadow:0 6px 22px rgba(41,128,255,0.14);
+      transform:translateY(-4px);
+    }
+
+    /* Auth Card */
+    .auth-card{
+      width:100%; max-width:460px;
+      padding:2.2rem;
+      border-radius:var(--card-radius);
+      background:var(--glass-bg);
+      border:1px solid var(--glass-border);
+      backdrop-filter:blur(18px);
+      box-shadow:0 18px 50px rgba(10,14,23,0.28);
+    }
+    .auth-card.card-dark{
+      background:rgba(18,18,20,0.44);
+      border:1px solid rgba(255,255,255,0.04);
+    }
+  </style>
+</head>
+
+<body class="theme-fade">
+
+  <!-- Background Canvas -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- Glow -->
+  <svg class="bg-glow" viewBox="0 0 1200 400">
+    <defs>
+      <radialGradient id="g1">
+        <stop offset="0%" stop-color="#7cc1ff" stop-opacity="0.12"/>
+        <stop offset="60%" stop-color="#99d2ff" stop-opacity="0.06"/>
+        <stop offset="100%" stop-color="white" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <ellipse cx="600" cy="160" rx="480" ry="220" fill="url(#g1)"/>
+  </svg>
+
+  <!-- Theme Switcher -->
+  <div class="theme-switcher">
+    <button class="theme-btn" id="btn-light"><i class="bi bi-sun"></i></button>
+    <button class="theme-btn" id="btn-dark"><i class="bi bi-moon-fill"></i></button>
+    <button class="theme-btn" id="btn-glass"><i class="bi bi-droplet-half"></i></button>
+  </div>
+
+  <!-- Perfect Center Wrapper -->
+  <div class="auth-wrapper">
+    <div class="auth-card shadow ripple">
+      {% block content %}
+      {% endblock %}
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    /* Theme Logic */
+    (function(){
+      const root = document.body;
+      const light = document.getElementById("btn-light");
+      const dark = document.getElementById("btn-dark");
+      const glass = document.getElementById("btn-glass");
+      const buttons = [light, dark, glass];
+
+      function applyTheme(name){
+        root.className = "theme-fade theme-" + name;
+        buttons.forEach(b => b.classList.remove("active"));
+        document.getElementById("btn-"+name).classList.add("active");
+
+        document.querySelector(".auth-card")
+          .classList.toggle("card-dark", name === "dark");
+
+        localStorage.setItem("theme", name);
+      }
+
+      const initial = localStorage.getItem("theme") || "light";
+      applyTheme(initial);
+
+      light.onclick = () => applyTheme("light");
+      dark.onclick = () => applyTheme("dark");
+      glass.onclick = () => applyTheme("glass");
+    })();
+
+    /* Simple particle background (lightweight) */
+    (function(){
+      const c = document.getElementById("bg-canvas");
+      const ctx = c.getContext("2d");
+
+      function resize(){
+        c.width = innerWidth;
+        c.height = innerHeight;
+      }
+      resize();
+      addEventListener("resize", resize);
+    })();
+  </script>
+
+</body>
+</html>

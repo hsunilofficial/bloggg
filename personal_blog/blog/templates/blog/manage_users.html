@@ -1,0 +1,113 @@
+{% extends "blog/base_admin.html" %}
+{% load static %}
+
+{% block title %}Manage Users{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-semibold mb-0">Manage Users</h2>
+    <a href="{% url 'add_user' %}" class="btn btn-primary">
+        <i class="bi bi-person-plus me-1"></i> Add New User
+    </a>
+</div>
+
+<!-- SEARCH -->
+<form method="get" class="card p-3 shadow-sm mb-4">
+    <div class="row g-2 align-items-center">
+
+        <!-- Search Bar -->
+        <div class="col-md-6">
+            <div class="input-group">
+                <input type="text" name="q" value="{{ q }}" 
+                       class="form-control" 
+                       placeholder="Search by name, username or email...">
+                <button class="btn btn-outline-secondary">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Reset Button -->
+        <div class="col-md-2">
+            <a href="{% url 'manage_users' %}" class="btn btn-outline-danger w-100">
+                <i class="bi bi-arrow-counterclockwise"></i> Reset
+            </a>
+        </div>
+
+    </div>
+</form>
+
+<!-- USER TABLE -->
+<div class="card p-4 shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Joined</th>
+                    <th>Role</th>
+                    <th class="text-center" style="width: 150px;">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for user in page_obj %}
+                <tr>
+                    <td class="fw-semibold">{{ user.get_full_name|default:user.username }}</td>
+                    <td>{{ user.username }}</td>
+                    <td class="text-muted">{{ user.email }}</td>
+                    <td>{{ user.date_joined|date:"M d, Y" }}</td>
+
+                    <!-- ROLES -->
+                    <td>
+                        {% if user.profile.role == "admin" %}
+                            <span class="badge bg-danger px-3 py-2">Admin</span>
+                        {% elif user.profile.role == "editor" %}
+                            <span class="badge bg-warning text-dark px-3 py-2">Editor</span>
+                        {% else %}
+                            <span class="badge bg-secondary px-3 py-2">Viewer</span>
+                        {% endif %}
+                    </td>
+
+                    <!-- ACTION BUTTONS -->
+                    <td class="text-center">
+                        <div class="d-flex justify-content-center gap-2">
+
+                            <a href="{% url 'view_user' user.id %}"
+                               class="btn btn-sm btn-outline-info rounded-circle" title="View">
+                                <i class="bi bi-eye"></i>
+                            </a>
+
+                            <a href="{% url 'edit_user' user.id %}"
+                               class="btn btn-sm btn-outline-warning rounded-circle" title="Edit">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+
+                            {% if user.profile.role != "admin" %}
+                            <a href="{% url 'delete_user' user.id %}"
+                               class="btn btn-sm btn-outline-danger rounded-circle" title="Delete">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                            {% endif %}
+
+                        </div>
+                    </td>
+                </tr>
+
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-4">
+                        No users found.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+{% endblock %}

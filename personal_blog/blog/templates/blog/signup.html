@@ -1,0 +1,81 @@
+{% extends 'blog/base_auth.html' %}
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+<h3 class="text-center mb-4 fw-bold">Create Your Account</h3>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <!-- Username -->
+    <div class="form-floating mb-3">
+        <input 
+            type="text" 
+            class="form-control" 
+            id="username" 
+            name="username" 
+            placeholder="Username"
+            required
+        >
+        <label for="username">Username</label>
+        {% if form.username.errors %}
+            <small class="text-warning">{{ form.username.errors }}</small>
+        {% endif %}
+    </div>
+
+    <!-- Email -->
+    <div class="form-floating mb-3">
+        <input 
+            type="email" 
+            class="form-control" 
+            id="email" 
+            name="email" 
+            placeholder="you@example.com"
+            required
+        >
+        <label for="email">Email</label>
+        {% if form.email.errors %}
+            <small class="text-warning">{{ form.email.errors }}</small>
+        {% endif %}
+    </div>
+
+    <!-- Password -->
+    <div class="form-floating mb-3">
+        <input 
+            type="password" 
+            class="form-control" 
+            id="password1" 
+            name="password1" 
+            placeholder="Password"
+            required
+        >
+        <label for="password1">Password</label>
+        {% if form.password1.errors %}
+            <small class="text-warning">{{ form.password1.errors }}</small>
+        {% endif %}
+    </div>
+
+    <!-- Confirm Password -->
+    <div class="form-floating mb-3">
+        <input 
+            type="password" 
+            class="form-control" 
+            id="password2" 
+            name="password2" 
+            placeholder="Confirm Password"
+            required
+        >
+        <label for="password2">Confirm Password</label>
+        {% if form.password2.errors %}
+            <small class="text-warning">{{ form.password2.errors }}</small>
+        {% endif %}
+    </div>
+
+    <button type="submit" class="btn-premium w-100">Sign Up</button>
+</form>
+
+<p class="text-center mt-3">
+    Already have an account? 
+    <a href="{% url 'login' %}" class="text-warning fw-semibold">Login</a>
+</p>
+{% endblock %}

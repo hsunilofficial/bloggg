@@ -1,0 +1,102 @@
+{% extends "blog/base_admin.html" %}
+{% block title %}Analytics{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+
+  <h2 class="fw-bold mb-3">📊 Site Analytics</h2>
+
+  <div class="row g-4 mb-4">
+    <div class="col-md-3">
+      <div class="card shadow-sm p-3 text-center border border-primary">
+        <h4>{{ total_posts|default:0 }}</h4>
+        <p class="text-secondary mb-0">Total Posts</p>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow-sm p-3 text-center border border-success">
+        <h4>{{ published_posts|default:0 }}</h4>
+        <p class="text-secondary mb-0">Published</p>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow-sm p-3 text-center border border-warning">
+        <h4>{{ draft_posts|default:0 }}</h4>
+        <p class="text-secondary mb-0">Drafts</p>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow-sm p-3 text-center border border-danger">
+        <h4>{{ pending_posts|default:0 }}</h4>
+        <p class="text-secondary mb-0">Pending</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-md-6">
+      <div class="card p-3 shadow-sm">
+        <h5 class="text-center fw-semibold">📊 Posts by Status</h5>
+        <canvas id="postsChart" height="200"></canvas>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card p-3 shadow-sm">
+        <h5 class="text-center fw-semibold">👥 User Roles</h5>
+        <canvas id="rolesChart" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  new Chart(document.getElementById('postsChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Published', 'Draft', 'Pending'],
+      datasets: [{
+        label: "Posts Count",
+        data: [
+          "{{ published_posts|default:'0' }}",
+          "{{ draft_posts|default:'0' }}",
+          "{{ pending_posts|default:'0' }}"
+        ],
+        backgroundColor: ['#198754', '#ffc107', '#dc3545'],
+        borderColor: ['#198754', '#ffc107', '#dc3545'],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true } }
+    }
+  });
+
+  new Chart(document.getElementById('rolesChart'), {
+    type: 'pie',
+    data: {
+      labels: ['Admins', 'Editors', 'Viewers'],
+      datasets: [{
+        data: [
+          "{{ admins|default:'0' }}",
+          "{{ editors|default:'0' }}",
+          "{{ viewers|default:'0' }}"
+        ],
+        backgroundColor: ['#dc3545', '#0d6efd', '#198754']
+      }]
+    },
+    options: { responsive: true }
+  });
+</script>
+
+{% endblock %}

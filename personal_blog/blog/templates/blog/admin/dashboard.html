@@ -1,0 +1,97 @@
+{% extends 'blog/base_admin.html' %}
+{% block title %}Dashboard | Admin Panel{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div class="d-flex align-items-center gap-3">
+    <h2>Welcome, Admin!</h2>
+  </div>
+  <button class="btn btn-primary">
+    <i class="bi bi-plus-circle"></i> New Post
+  </button>
+</div>
+
+<!-- Stats Cards -->
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="card shadow-sm">
+      <div class="card-body text-center">
+        <h5>Total Posts</h5>
+        <h2>{{ total_posts|default:128 }}</h2>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card shadow-sm">
+      <div class="card-body text-center">
+        <h5>Followers</h5>
+        <h2>{{ total_followers|default:2350 }}</h2>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card shadow-sm">
+      <div class="card-body text-center">
+        <h5>Likes</h5>
+        <h2>{{ total_likes|default:9785 }}</h2>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card shadow-sm">
+      <div class="card-body text-center">
+        <h5>Comments</h5>
+        <h2>{{ total_comments|default:420 }}</h2>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Chart Section -->
+<div class="card shadow-sm mb-4">
+  <div class="card-body">
+    <h5 class="card-title mb-3">Traffic Overview</h5>
+    <div style="height: 300px;">
+      <canvas id="trafficChart" style="max-height: 100%; width: 100%;"></canvas>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const ctx = document.getElementById('trafficChart');
+    if (!ctx) return;
+
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        datasets: [{
+          label: 'Visitors',
+          data: [150, 200, 180, 220, 270, 300, 250],
+          borderWidth: 3,
+          borderColor: '#0d6efd',
+          tension: 0.4,
+          fill: true,
+          backgroundColor: 'rgba(13, 110, 253, 0.1)',
+          pointBackgroundColor: '#0d6efd'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: { beginAtZero: true }
+        },
+        plugins: {
+          legend: { display: true, position: 'bottom' }
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}

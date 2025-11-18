@@ -1,0 +1,25 @@
+{% extends 'blog/base_admin.html' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+  <h2 class="fw-semibold mb-3">{{ post.title }}</h2>
+
+  <p class="text-muted">
+    By {{ post.author|default:"Anonymous" }} • {{ post.created_at|date:"M d, Y" }}
+  </p>
+
+  {% if post.image %}
+    <img src="{{ post.image.url }}" class="img-fluid rounded mb-4" alt="Post image">
+  {% endif %}
+
+  <p class="fs-5">{{ post.content }}</p>
+
+  <a href="{% url 'posts' %}" class="btn btn-secondary mt-3">Back to Posts</a>
+
+</div>
+
+{% endblock %}

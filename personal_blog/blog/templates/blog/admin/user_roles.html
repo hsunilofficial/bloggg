@@ -1,0 +1,44 @@
+{% extends 'blog/base_admin.html' %}
+{% block title %}User Roles & Permissions | Admin{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="fw-semibold mb-4"><i class="bi bi-shield-lock me-2 text-primary"></i>User Roles & Permissions</h2>
+
+  <table class="table table-hover align-middle">
+    <thead class="table-light">
+      <tr>
+        <th scope="col">Username</th>
+        <th scope="col">Email</th>
+        <th scope="col">Current Role</th>
+        <th scope="col" class="text-end">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+      <tr>
+        <td>{{ user.username }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.profile.role|title }}</td>
+        <td class="text-end">
+          <form method="post" class="d-flex justify-content-end align-items-center gap-2">
+            {% csrf_token %}
+            <input type="hidden" name="user_id" value="{{ user.id }}">
+            <select name="role" class="form-select form-select-sm w-auto">
+              <option value="admin" {% if user.profile.role == 'admin' %}selected{% endif %}>Admin</option>
+              <option value="editor" {% if user.profile.role == 'editor' %}selected{% endif %}>Editor</option>
+              <option value="viewer" {% if user.profile.role == 'viewer' %}selected{% endif %}>Viewer</option>
+            </select>
+            <button type="submit" class="btn btn-primary btn-sm">Update</button>
+          </form>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="4" class="text-center text-muted py-3">No users found.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
