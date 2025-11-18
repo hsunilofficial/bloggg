@@ -1,0 +1,1 @@
+worker: celery -A personal_blog worker --loglevel=info

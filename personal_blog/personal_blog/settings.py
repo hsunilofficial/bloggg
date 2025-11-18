@@ -68,6 +68,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'personal_blog.wsgi.application'
+ASGI_APPLICATION = 'personal_blog.asgi.application'
 
 
 # Database
