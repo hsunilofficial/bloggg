@@ -66,7 +66,7 @@ def signup_view(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            Profile.objects.create(user=user, role="viewer")
+            #Profile.objects.get_or_create(user=user, defaults={"role": "viewer"})
             login(request, user)
             return redirect("home")
     else:
