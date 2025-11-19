@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: bloggg
+    env: python
+    repo: https://github.com/hsunilofficial/bloggg
+    plan: free
+    buildCommand: "./venv/bin/pip install -r requirements.txt"
+    startCommand: "gunicorn personal_blog.wsgi:application"
+    envVars:
+      DJANGO_SETTINGS_MODULE: personal_blog.settings
