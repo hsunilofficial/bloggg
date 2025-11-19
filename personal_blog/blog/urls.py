@@ -1,6 +1,7 @@
 # blog/urls.py  (PUBLIC SITE URLS)
 from django.urls import path
 from blog import views
+rom django.contrib.auth import views as auth_views
 
 urlpatterns = [
     # Public Pages
