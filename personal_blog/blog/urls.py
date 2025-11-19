@@ -14,9 +14,9 @@ urlpatterns = [
     path('post/<int:post_id>/', views.view_post, name='view_post'),
 
     # Authentication
-    path('login/', views.login_view, name='login'),
-    path('signup/', views.signup_view, name='signup'),
-    path('logout/', views.logout_view, name='logout'),
+    path('accounts/login/', auth_views.LoginView.as_view(template_name='blog/login.html'), name='login'),
+    path('accounts/signup/',auth_views.LogoutView.as_view(template_name='blog/signup.html'),name='signup'),
+    path('accounts/logout/',auth_views.LogoutView.as_view(template_name='blog/logout.html'),name='logout'),
 
     # Forgot Password
     path('forgot-password/', views.ForgotPasswordView.as_view(), name='forgot_password'),
