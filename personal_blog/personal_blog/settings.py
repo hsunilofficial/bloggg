@@ -25,7 +25,9 @@ SECRET_KEY = 'django-insecure-1b908jt^*_h+vvo1i_o*h7fj%3ii-4h8&&qycoj8_ox!$luqj_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["localhost",
+                 "127.0.0.1",
+                 "pas-scoring-systems-gravity.trycloudflare.com"]
 
 
 # Application definition
@@ -149,3 +151,8 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'hithapersonalblog@gmail.com'
 EMAIL_HOST_PASSWORD = 'vwqo jzuw zhug ghnd'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://pas-scoring-systems-gravity.trycloudflare.com"
+]
+
