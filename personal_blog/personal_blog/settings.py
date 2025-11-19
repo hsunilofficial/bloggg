@@ -156,3 +156,5 @@ CSRF_TRUSTED_ORIGINS = [
     "https://pas-scoring-systems-gravity.trycloudflare.com"
 ]
 
+LOGIN_REDIRECT_URL = '/admin-dashboard/'
+
