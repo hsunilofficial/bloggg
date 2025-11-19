@@ -13,6 +13,9 @@ urlpatterns = [
 
     # Custom admin dashboard
     path('admin-dashboard/', include('blog.urls_admin')),
+
+    #accounts
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
 
 
